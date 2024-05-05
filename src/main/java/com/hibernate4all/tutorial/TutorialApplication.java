@@ -2,6 +2,8 @@ package com.hibernate4all.tutorial;
 
 import com.hibernate4all.tutorial.domain.Director;
 import com.hibernate4all.tutorial.domain.Movie;
+import com.hibernate4all.tutorial.domain.Vehicle;
+import com.hibernate4all.tutorial.repository.jpa.VehicleRepositoryJpa;
 import com.hibernate4all.tutorial.service.DirectorService;
 import com.hibernate4all.tutorial.service.MovieService;
 import org.springframework.boot.CommandLineRunner;
@@ -19,11 +21,14 @@ import java.util.stream.Collectors;
 public class TutorialApplication implements CommandLineRunner {
 	private final DirectorService directorService;
 	private final MovieService movieService;
+	private final VehicleRepositoryJpa vehicleRepositoryJpa;
 
     public TutorialApplication(DirectorService directorService,
-							   MovieService movieService) {
+                               MovieService movieService,
+							   VehicleRepositoryJpa vehicleRepositoryJpa) {
         this.directorService = directorService;
         this.movieService = movieService;
+        this.vehicleRepositoryJpa = vehicleRepositoryJpa;
     }
 
     public static void main(String[] args) {
@@ -37,10 +42,12 @@ public class TutorialApplication implements CommandLineRunner {
 		List<String> lastNames = Arrays.asList("Mellouki", "Tremblay", "Dumas", "Rochefort");
 
 		AtomicInteger j = new AtomicInteger();
-		List<Director> directors = firstNames.stream().map(firstName -> directorService.saveDirector(Director.builder()
+		List<Director> directors = firstNames.stream().map(firstName -> {
+			j.getAndIncrement();
+			return directorService.saveDirector(Director.builder()
                 .firstName(firstName)
-                .lastName(lastNames.get(j.get()))
-                .build())).collect(Collectors.toList());
+                .lastName(lastNames.get(j.get() - 1))
+                .build()); }).collect(Collectors.toList());
 
 
 		List<String> nameMovies = Arrays.asList("Winter Break", "Killers of the Flower Moon", "King's Land", " Perfect Days", "Godzilla Minus One");
@@ -64,6 +71,35 @@ public class TutorialApplication implements CommandLineRunner {
 					i.getAndIncrement();
 					return movie;
 				}).forEach(movie -> movieService.saveMovie(movie));
+
+		Vehicle vehicle1 = Vehicle.builder().
+		type("Car").brand("Toyota")
+				.model("Camry")
+				.horsepower(200)
+				.build();
+
+		Vehicle vehicle2 = new Vehicle();
+		vehicle2.setType("Truck");
+		vehicle2.setBrand("Ford");
+		vehicle2.setModel("F-150");
+		vehicle2.setHorsepower(300);
+
+		Vehicle vehicle3 = new Vehicle();
+		vehicle3.setType("Motorcycle");
+		vehicle3.setBrand("Honda");
+		vehicle3.setModel("CBR600RR");
+		vehicle3.setHorsepower(120);
+
+		Vehicle vehicle4 = new Vehicle();
+		vehicle4.setType("SUV");
+		vehicle4.setBrand("Jeep");
+		vehicle4.setModel("Wrangler");
+		vehicle4.setHorsepower(250);
+
+		this.vehicleRepositoryJpa.save(vehicle1);
+		this.vehicleRepositoryJpa.save(vehicle2);
+		this.vehicleRepositoryJpa.save(vehicle3);
+		this.vehicleRepositoryJpa.save(vehicle4);
 
 	}
 }

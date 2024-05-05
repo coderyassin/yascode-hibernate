@@ -18,7 +18,7 @@ public class Director {
     private Long id;
     private String firstName;
     private String lastName;
-    @OneToMany(mappedBy = "director", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @OneToMany(mappedBy = "director", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    /*@JsonIgnore*/
     private List<Movie> movies;
 }

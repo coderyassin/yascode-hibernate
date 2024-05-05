@@ -7,6 +7,11 @@ import java.util.List;
 public interface DirectorService {
 
     Director saveDirector(Director director);
-    List<Director> directorsByMovieTitle(String title, String directorName);
+    List<Director> findDirectorsByFirstName(String firstName);
+    List<Director> findDirectorsByLastName(String lastName);
+    List<Director> directorsByMovieTitle(String title, String directorFirstName, String directorLastName);
+    List<Director> findByMovieTitle(String title, String directorFirstName, String directorLastName);
+    List<Director> findDirectorsByFirstNameAndLastName(String firstName, String lastName);
 
+    List<Director> findAllDirectorsWithConjunction();
 }
