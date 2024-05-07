@@ -3,11 +3,16 @@ package com.hibernate4all.tutorial.service.impl;
 import com.hibernate4all.tutorial.domain.Director;
 import com.hibernate4all.tutorial.repository.DirectorRepository;
 import com.hibernate4all.tutorial.repository.jpa.DirectorRepositoryJpa;
+import com.hibernate4all.tutorial.repository.jpa.projections.DirectorProjection;
 import com.hibernate4all.tutorial.repository.jpa.specifications.DirectorSpecifications;
 import com.hibernate4all.tutorial.service.DirectorService;
+import jakarta.annotation.PostConstruct;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,5 +91,29 @@ public class DirectorServiceImpl implements DirectorService {
                     director.setMovies(null);
                     return director;
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Object> directors(int pageNumber, int pageSize) {
+        Page<Director> directorsPage = this.directorRepositoryJpa.findAll(PageRequest.of(pageNumber, pageSize));
+
+        return Map.of("content", directorsPage.getContent().stream()
+                .map(director -> {
+                    director.setMovies(null);
+                    return director;
+                }).collect(Collectors.toList()),
+                "totalElements", directorsPage.getTotalElements(),
+                "totalPages", directorsPage.getTotalPages());
+    }
+
+    @Override
+    public Page<DirectorProjection> getFirstNameAndLastName() {
+        return this.directorRepositoryJpa.findFirstNameAndLastName(PageRequest.of(0,10));
+    }
+
+    @PostConstruct
+    private int directorsTest() {
+        Page<DirectorProjection> idAndFirstNameAndLastName = this.directorRepositoryJpa.findFirstNameAndLastName(PageRequest.of(0,10));
+        return 10;
     }
 }

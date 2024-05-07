@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -38,8 +39,19 @@ public class TutorialApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		List<String> firstNames = Arrays.asList("Yassin" ,"Michel", "Pierre", "Jean-Baptiste");
-		List<String> lastNames = Arrays.asList("Mellouki", "Tremblay", "Dumas", "Rochefort");
+		List<String> firstNames = new ArrayList<>(Arrays.asList("Yassin" ,"Michel", "Pierre", "Jean-Baptiste"));
+		List<String> lastNames = new ArrayList<>(Arrays.asList("Mellouki", "Tremblay", "Dumas", "Rochefort"));
+
+		int size = 0;
+		while(size < 5) {
+			List<String> cloneFN = firstNames.stream().collect(Collectors.toList());
+			List<String> cloneLN = lastNames.stream().collect(Collectors.toList());
+
+			cloneFN.stream().forEach(fn -> firstNames.add(fn));
+			cloneLN.stream().forEach(fn -> lastNames.add(fn));
+
+			size ++;
+		}
 
 		AtomicInteger j = new AtomicInteger();
 		List<Director> directors = firstNames.stream().map(firstName -> {
@@ -48,6 +60,8 @@ public class TutorialApplication implements CommandLineRunner {
                 .firstName(firstName)
                 .lastName(lastNames.get(j.get() - 1))
                 .build()); }).collect(Collectors.toList());
+
+		System.out.println("Le sauvegarde des réalisateurs est terminé");
 
 
 		List<String> nameMovies = Arrays.asList("Winter Break", "Killers of the Flower Moon", "King's Land", " Perfect Days", "Godzilla Minus One");
@@ -62,12 +76,13 @@ public class TutorialApplication implements CommandLineRunner {
 
 		nameMovies.stream().map(movie -> Movie.builder().name(movie).build())
 				.map(movie -> {
-					movie.setReleaseDate(dates.get(i.get()));
+					/*movie.setReleaseDate(dates.get(i.get()));
 					if(i.get() > (directors.size() - 1)) {
 						movie.setDirector(directors.get(0));
 					} else {
 						movie.setDirector(directors.get(i.get()));
-					}
+					}*/
+					movie.setDirector(directors.get(i.get()));
 					i.getAndIncrement();
 					return movie;
 				}).forEach(movie -> movieService.saveMovie(movie));

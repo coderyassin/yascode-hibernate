@@ -1,13 +1,16 @@
 package com.hibernate4all.tutorial.controller;
 
+import com.hibernate4all.tutorial.controller.response.DirectorResponse;
 import com.hibernate4all.tutorial.domain.Director;
+import com.hibernate4all.tutorial.repository.jpa.projections.DirectorProjection;
 import com.hibernate4all.tutorial.service.DirectorService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/directors")
@@ -51,6 +54,33 @@ public class DirectorController {
     @GetMapping(value = {"/all"})
     public List<Director> directors() {
         return this.directorService.findAllDirectorsWithConjunction();
+    }
+
+    @GetMapping(value = "/all/{page}/{size}")
+    public DirectorResponse directors(@PathVariable("page") int page,
+                                    @PathVariable("size") int size) {
+        Map<String, Object> directors = this.directorService.directors(page, size);
+        return DirectorResponse.builder()
+                .directors((List<Director>) directors.get("content"))
+                .totalElements((Long) directors.get("totalElements"))
+                .totalPages((Integer) directors.get("totalPages"))
+                .build();
+    }
+
+    @GetMapping(value = "/all/filter")
+    public DirectorResponse directorsWithoutPathVariables(@RequestParam(value = "page", defaultValue = "0", required = false) Optional<Integer> page,
+                                                          @RequestParam(value = "size", defaultValue = "10", required = false) Optional<Integer> size) {
+        Map<String, Object> directors = this.directorService.directors(page.get(), size.get());
+        return DirectorResponse.builder()
+                .directors((List<Director>) directors.get("content"))
+                .totalElements((Long) directors.get("totalElements"))
+                .totalPages((Integer) directors.get("totalPages"))
+                .build();
+    }
+
+    @GetMapping("/test")
+    public Page<DirectorProjection> test() {
+        return this.directorService.getFirstNameAndLastName();
     }
 
 }
