@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class TutorialApplication implements CommandLineRunner {
-	private final DirectorService directorService;
+	/*private final DirectorService directorService;
 	private final MovieService movieService;
 	private final VehicleRepositoryJpa vehicleRepositoryJpa;
 
@@ -30,13 +30,18 @@ public class TutorialApplication implements CommandLineRunner {
         this.directorService = directorService;
         this.movieService = movieService;
         this.vehicleRepositoryJpa = vehicleRepositoryJpa;
-    }
+    }*/
 
     public static void main(String[] args) {
 		SpringApplication.run(TutorialApplication.class, args);
 	}
 
 	@Override
+	public void run(String... args) throws Exception {
+		System.out.println("------------------- YASCODE -------------------");
+	}
+
+	/*@Override
 	public void run(String... args) throws Exception {
 
 		List<String> firstNames = new ArrayList<>(Arrays.asList("Yassin" ,"Michel", "Pierre", "Jean-Baptiste"));
@@ -76,12 +81,12 @@ public class TutorialApplication implements CommandLineRunner {
 
 		nameMovies.stream().map(movie -> Movie.builder().name(movie).build())
 				.map(movie -> {
-					/*movie.setReleaseDate(dates.get(i.get()));
+					*//*movie.setReleaseDate(dates.get(i.get()));
 					if(i.get() > (directors.size() - 1)) {
 						movie.setDirector(directors.get(0));
 					} else {
 						movie.setDirector(directors.get(i.get()));
-					}*/
+					}*//*
 					movie.setDirector(directors.get(i.get()));
 					i.getAndIncrement();
 					return movie;
@@ -116,5 +121,5 @@ public class TutorialApplication implements CommandLineRunner {
 		this.vehicleRepositoryJpa.save(vehicle3);
 		this.vehicleRepositoryJpa.save(vehicle4);
 
-	}
+	}*/
 }

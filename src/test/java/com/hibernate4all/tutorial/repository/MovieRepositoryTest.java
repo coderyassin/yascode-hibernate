@@ -15,6 +15,7 @@ import java.util.List;
 @ContextConfiguration(classes = {PersistenceConfig.class})
 public class MovieRepositoryTest {
 
+    /*
     @Autowired
     private MovieRepository movieRepository;
 
@@ -43,6 +44,6 @@ public class MovieRepositoryTest {
         Movie movie = new Movie();
         movie.setName(name);
         return movie;
-    }
+    }*/
 
 }

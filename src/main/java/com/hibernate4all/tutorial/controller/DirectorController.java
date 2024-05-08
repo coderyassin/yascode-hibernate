@@ -78,8 +78,8 @@ public class DirectorController {
                 .build();
     }
 
-    @GetMapping("/test")
-    public Page<DirectorProjection> test() {
+    @GetMapping("/all/firstNameAndLastName")
+    public Page<DirectorProjection> directorsWithSomeAttributes() {
         return this.directorService.getFirstNameAndLastName();
     }
 
